@@ -23,6 +23,23 @@ class NewsService {
       }
       return articlesList;
     } catch (e) {
+      if (e is DioException) {
+        if (e.response != null) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx and is not 304.
+          print('Dio Error Status Code: ${e.response?.statusCode}');
+          print('Dio Error Response Data: ${e.response?.data}');
+          // Extract and display the error message from the response data
+          var errorMessage = e.response?.data['message'];
+          print('Error Message: $errorMessage');
+        } else {
+          // Something went wrong while sending the request
+          print('Dio Error: ${e.message}');
+        }
+      } else {
+        // Handle other types of errors
+        print('Unexpected Error: $e');
+      }
       print(e.toString());
       return [];
     }
